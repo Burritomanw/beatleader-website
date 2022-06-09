@@ -43,6 +43,7 @@
   $: rightBadCuts = isAverage ? (stats?.rightBadCuts ?? null) : opt(beatSavior, 'trackers.hitTracker.rightBadCuts', null)
   $: rightMissedNotes = isAverage ? (stats?.rightMiss ?? null) : opt(beatSavior, 'trackers.hitTracker.rightMiss', null)
   $: rightMiss = (rightBadCuts || 0) + (rightMissedNotes || 0)
+  $: velocityTracker = stats?.velocityTracker
 
   $: compareToStats = compareTo ? compareTo.stats : null;
   $: compareToJumpDistance = opt(compareTo, 'songJumpDistance', null)
@@ -55,6 +56,7 @@
   $: compareToRightMissedNotes = opt(compareTo, 'trackers.hitTracker.rightMiss', null)
   $: compareToRightMiss = compareTo ? (compareToRightBadCuts || 0) + (compareToRightMissedNotes || 0) : null
   $: failedAt = formatFailedAt(beatSavior)
+  
 </script>
 
 {#if stats}
@@ -141,6 +143,52 @@
       <Badge label="JD" color="white" bgColor="var(--dimmed)" fluid={true}>
         <svelte:fragment slot="value">
           <Value value={jumpDistance} digits={2} prevValue={compareToJumpDistance} prevAbsolute={true} prevWithSign={false} />
+        </svelte:fragment>
+      </Badge>
+    {/if}
+
+    {#if velocityTracker}
+      <Badge label="Left angular" color="white" bgColor="var(--dimmed)" fluid={true}>
+        <svelte:fragment slot="value">
+          <Value value={velocityTracker.leftHandAngularVelocity * 100} digits={2} />
+        </svelte:fragment>
+      </Badge>
+      
+      <Badge label="Right angular" color="white" bgColor="var(--dimmed)" fluid={true}>
+        <svelte:fragment slot="value">
+          <Value value={velocityTracker.rightHandAngularVelocity * 100} digits={2} />
+        </svelte:fragment>
+      </Badge>
+      <Badge label="Left rolling" color="white" bgColor="var(--dimmed)" fluid={true}>
+        <svelte:fragment slot="value">
+          <Value value={velocityTracker.leftHandWristRollingVelocity * 100} digits={2} />
+        </svelte:fragment>
+      </Badge>
+      <Badge label="Right rolling" color="white" bgColor="var(--dimmed)" fluid={true}>
+        <svelte:fragment slot="value">
+          <Value value={velocityTracker.rightHandWristRollingVelocity * 100} digits={2} />
+        </svelte:fragment>
+      </Badge>
+
+      <Badge label="Left max angular" color="white" bgColor="var(--dimmed)" fluid={true}>
+        <svelte:fragment slot="value">
+          <Value value={velocityTracker.maxLeftHandAngularVelocity * 100} digits={2} />
+        </svelte:fragment>
+      </Badge>
+      
+      <Badge label="Right max angular" color="white" bgColor="var(--dimmed)" fluid={true}>
+        <svelte:fragment slot="value">
+          <Value value={velocityTracker.maxRightHandAngularVelocity * 100} digits={2} />
+        </svelte:fragment>
+      </Badge>
+      <Badge label="Left max rolling" color="white" bgColor="var(--dimmed)" fluid={true}>
+        <svelte:fragment slot="value">
+          <Value value={velocityTracker.maxLeftHandWristRollingVelocity * 100} digits={2} />
+        </svelte:fragment>
+      </Badge>
+      <Badge label="Right max rolling" color="white" bgColor="var(--dimmed)" fluid={true}>
+        <svelte:fragment slot="value">
+          <Value value={velocityTracker.maxRightHandWristRollingVelocity * 100} digits={2} />
         </svelte:fragment>
       </Badge>
     {/if}

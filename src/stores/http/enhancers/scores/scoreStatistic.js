@@ -29,6 +29,7 @@ export default async (data) => {
 
         stats.won = statistic.winTracker.won;
         stats.pauses = statistic.winTracker.nbOfPause;
+        stats.velocityTracker = statistic.velocityTracker;
 
         statistic.scoreTracker = {rawRatio: data.score?.unmodifiedAcc ? data.score.unmodifiedAcc / 100 : null};
 
