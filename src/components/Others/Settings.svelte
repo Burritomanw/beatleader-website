@@ -25,6 +25,7 @@
   const DEFAULT_SECONDARY_PP_METRICS = "weighted";
   const DEFAULT_AVATAR_ICONS = "show";
   const DEFAULT_BEATSAVIOR_COMPARISON = "show";
+  const DEFAULT_ONECLICK_VALUE = "modassistant";
 
   let twitchToken = null;
 
@@ -68,6 +69,11 @@
     { name: "Unbounded - MicroBlock", value: "unbounded" },
   ];
 
+  const oneclickOptions = [
+    { name: "Mod Assistant", value: DEFAULT_ONECLICK_VALUE },
+    { name: "Playlist sync", value: "playlist" },
+  ];
+
   let currentBillboardState = DEFAULT_BILLBOARD_STATE;
   let currentTheme = DEFAULT_THEME;
   let currentBGImage = "";
@@ -76,6 +82,7 @@
   let currentBeatSaviorComparison = DEFAULT_BEATSAVIOR_COMPARISON;
   let currentSecondaryPpMetrics = DEFAULT_SECONDARY_PP_METRICS;
   let currentAvatarIcons = DEFAULT_AVATAR_ICONS;
+  let currentOneclick = DEFAULT_ONECLICK_VALUE;
 
   function onConfigUpdated(config) {
     if (config?.locale) currentLocale = config.locale;
@@ -93,6 +100,8 @@
         config?.preferences?.iconsOnAvatars ?? DEFAULT_AVATAR_ICONS;
     if (config?.preferences?.theme)
       currentTheme = config?.preferences?.theme ?? DEFAULT_THEME;
+    if (config?.preferences?.oneclick)
+      currentOneclick = config?.preferences?.oneclick ?? DEFAULT_ONECLICK_VALUE;
     if (config?.preferences?.bgimage)
       currentBGImage = config?.preferences?.bgimage ?? "";
     if (config?.preferences?.beatSaviorComparison)
@@ -112,6 +121,7 @@
       draft.preferences.iconsOnAvatars = currentAvatarIcons;
       draft.preferences.beatSaviorComparison = currentBeatSaviorComparison;
       draft.preferences.theme = currentTheme;
+      draft.preferences.oneclick = currentOneclick;
       draft.preferences.bgimage = currentBGImage;
       document.location.reload()
     });
@@ -290,6 +300,15 @@
           <section class="option">
             <label title="Input url of the background image you want">Background Image</label>
             <input type="url" bind:value={currentBGImage} disabled={currentTheme=="default"} />
+          </section>
+
+          <section class="option">
+            <label title="How One-Click button will work">One-click installs</label>
+            <Select bind:value={currentOneclick}>
+              {#each oneclickOptions as option (option.value)}
+                <option value={option.value}>{option.name}</option>
+              {/each}
+            </Select>
           </section>
 
           <section class="option twitch">

@@ -32,6 +32,7 @@ const DEFAULT_CONFIG = {
     iconsOnAvatars: 'show',
     beatSaviorComparison: 'show',
     theme:'mirror',
+    oneclick: 'modassistant',
     bgimage:"/assets/background.png"
   },
   locale: DEFAULT_LOCALE,
