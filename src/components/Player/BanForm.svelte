@@ -37,7 +37,7 @@
 	}
 </script>
 
-<div class="ranking-voting">
+<div class="container">
 	<Dialog
 		type="confirm"
 		title="Ban player"
@@ -51,13 +51,32 @@
                 <label>Reason:</label>
                 <input type="text" bind:value={reason} placeholder="Ban reason" class="sponsor-input">
             </div>
-			<div>
+			<div class="duration-container">
                 <label>Duration:</label>
-                <Select bind:value={duration} items={durations} isSearchable={true} />
+                <div class="select-container">
+                    <Select bind:value={duration} items={durations} isSearchable={true} />
+                </div>
             </div>
 		</div>
 	</Dialog>
 </div>
 
 <style>
+    .container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .duration-container {
+        display: flex;
+    }
+
+    .select-container {
+        display: grid;
+        width: 100%;
+    }
+
+    :global(.container .ss-modal) {
+		--itemHoverBG: #eb008c;
+	}
 </style>

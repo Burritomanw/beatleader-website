@@ -337,7 +337,9 @@ export default (refreshOnCreate = true) => {
     
   }
 
-  const banPlayer = (playerId, reason, duration) =>
+  const banPlayer = (playerId, reason, duration) => {
+  account.loading = true;
+  set(account);
   fetch(BL_API_URL + "user/ban" + (playerId ? `?id=${playerId}&reason=${reason}&duration=${duration}` : ""), { 
       method: 'POST', 
       credentials: 'include'
@@ -346,10 +348,13 @@ export default (refreshOnCreate = true) => {
     .then(
       data => {
           account.error = null;
-
+          account.loading = false;
           if (data.length > 0) {
             account.error = data;
           } else {
+            if (playerId) {
+              document.location.reload();
+            }
             account.message = playerId ? "Player banned ✔" : "Account suspended ✔";
           }
 
@@ -357,12 +362,15 @@ export default (refreshOnCreate = true) => {
             account.error = null;
             account.message = null;
             set(account);
-        }, 3500);
+        }, 6000);
 
           set(account);
       });
+    }
 
-  const unbanPlayer = (playerId) =>
+  const unbanPlayer = (playerId) => {
+  account.loading = true;
+  set(account);
   fetch(BL_API_URL + "user/unban" + (playerId ? `?id=${playerId}` : ""), { 
       method: 'POST', 
       credentials: 'include'
@@ -371,10 +379,13 @@ export default (refreshOnCreate = true) => {
     .then(
       data => {
           account.error = null;
-
+          account.loading = false;
           if (data.length > 0) {
             account.error = data;
           } else {
+            if (playerId) {
+              document.location.reload();
+            }
             account.message = playerId ? "Player unbanned ✔" : "Welcome back ✔";
           }
 
@@ -382,10 +393,11 @@ export default (refreshOnCreate = true) => {
             account.error = null;
             account.message = null;
             set(account);
-        }, 3500);
+        }, 6000);
 
           set(account);
       });
+    }
 
   const removeClanRequest = (clan, setAccount = true) => {
     if (Array.isArray(account?.clanRequest) && clan?.id) {

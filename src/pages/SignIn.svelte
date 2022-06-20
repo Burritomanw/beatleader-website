@@ -6,6 +6,7 @@
     import {CURRENT_URL, BL_API_URL} from '../network/queues/beatleader/api-queue'
     import { navigate } from "svelte-routing";
 import Dialog from "../components/Common/Dialog.svelte";
+import Spinner from "../components/Common/Spinner.svelte";
 
     export let action;
 
@@ -27,6 +28,7 @@ import Dialog from "../components/Common/Dialog.svelte";
     $: error = opt($account, 'error');
     $: message = opt($account, 'message');
     $: patreoned = opt($account, 'patreoned');
+    $: loading = opt($account, 'loading');
     $: performAction();
 </script>
 
@@ -163,7 +165,9 @@ If you not yet a patreon, you can become one right now at <a class="inlineLink" 
     And your replays will not be accepted anymore.<br><br>
 
     <b>You can activate it back only after the week of suspension.<br>
-        All account data will be deleted after 6 month of suspension!</b>
+        All account data will be deleted after 6 month of suspension!</b><br>
+    
+    Account suspension may take up to 3 minutes.
 
     <Button iconFa="fas fa-plus-square" label="Yes, suspend my account" on:click={() => suspendingDialogShown = !suspendingDialogShown}/>
     {/if}
@@ -180,7 +184,10 @@ If you not yet a patreon, you can become one right now at <a class="inlineLink" 
       </div>
     </Dialog>
   {/if}
-
+    
+  {#if loading}
+  <Spinner />
+  {/if}
 {#if error}
 <p class="error">{error}</p>
 {/if}
