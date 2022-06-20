@@ -31,8 +31,12 @@
       navigate(`/signin`)
     } else if (event.srcElement.innerText == "Change password") {
       navigate(`/signin/changePassword`)
+    } else if (event.srcElement.innerText == "Suspend account" || event.srcElement.innerText == "Activate account") {
+      navigate(`/signin/autoban`)
     } else if (event.srcElement.innerText == "Link patreon") {
       navigate(`/signin/linkPatreon`)
+    } else if (event.srcElement.innerText == "My login") {
+      navigate(`/signin/mylogin`)
     } else if (event.srcElement.innerText == "Log Out") {
       account.logOut();
     } else if (playerId) {
@@ -103,9 +107,17 @@
       }
       if (loggedInUser.player.id < 70000000000000000 || loggedInUser.migrated) {
         signupOptions.push("Change password");
+        signupOptions.push("My login");
       }
       if (!loggedInUser.patreoned) {
         signupOptions.push("Link patreon");
+      }
+      if (loggedInUser.ban) {
+         if (loggedInUser.ban.reason == "Self ban") {
+          signupOptions.push("Activate account");
+         }
+      } else {
+        signupOptions.push("Suspend account");
       }
       signupOptions.push("Log Out");
     } else {

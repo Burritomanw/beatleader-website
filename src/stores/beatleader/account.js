@@ -212,6 +212,33 @@ export default (refreshOnCreate = true) => {
         });
   }
 
+  const changeLogin = (newLogin) => {
+    let data = new FormData();
+    data.append('newLogin', newLogin);
+
+    fetch(BL_API_URL + "user/changeLogin", {
+        credentials: 'include',
+        method: 'PATCH',
+        body: data
+    })
+      .then(checkResponse)
+      .then(
+        data => {
+            if (data.length > 0) {
+                account.error = data;
+            } else {
+                account.message = "Login changed successfully ✔";
+                account.error = null;
+                refresh(true);
+                setTimeout(function(){
+                  account.message = null;
+                  set(account);
+                }, 3500);
+            }
+            set(account);
+        });
+  }
+
   const changeAvatar = (file, playerId) =>
     fetch(BL_API_URL + "user/avatar" + (playerId ? "?id=" + playerId : ""), { 
         method: 'PATCH', 
@@ -310,8 +337,8 @@ export default (refreshOnCreate = true) => {
     
   }
 
-  const banPlayer = (playerId) =>
-  fetch(BL_API_URL + "admin/ban?playerId=" + playerId, { 
+  const banPlayer = (playerId, reason, duration) =>
+  fetch(BL_API_URL + "user/ban" + (playerId ? `?id=${playerId}&reason=${reason}&duration=${duration}` : ""), { 
       method: 'POST', 
       credentials: 'include'
   })
@@ -321,18 +348,22 @@ export default (refreshOnCreate = true) => {
           account.error = null;
 
           if (data.length > 0) {
-              account.error = data;
-              setTimeout(function(){
-                  account.error = null;
-                  set(account);
-              }, 3500);
+            account.error = data;
+          } else {
+            account.message = playerId ? "Player banned ✔" : "Account suspended ✔";
           }
+
+          setTimeout(function(){
+            account.error = null;
+            account.message = null;
+            set(account);
+        }, 3500);
 
           set(account);
       });
 
   const unbanPlayer = (playerId) =>
-  fetch(BL_API_URL + "admin/unban?playerId=" + playerId, { 
+  fetch(BL_API_URL + "user/unban" + (playerId ? `?id=${playerId}` : ""), { 
       method: 'POST', 
       credentials: 'include'
   })
@@ -342,12 +373,16 @@ export default (refreshOnCreate = true) => {
           account.error = null;
 
           if (data.length > 0) {
-              account.error = data;
-              setTimeout(function(){
-                  account.error = null;
-                  set(account);
-              }, 3500);
+            account.error = data;
+          } else {
+            account.message = playerId ? "Player unbanned ✔" : "Welcome back ✔";
           }
+
+          setTimeout(function(){
+            account.error = null;
+            account.message = null;
+            set(account);
+        }, 3500);
 
           set(account);
       });
@@ -451,6 +486,7 @@ export default (refreshOnCreate = true) => {
     unbanClan,
     addClanInvitation,
     removeClanInvitation,
+    changeLogin,
   }
 
   return store;
