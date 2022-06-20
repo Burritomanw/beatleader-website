@@ -1,9 +1,11 @@
 <script>
     import Button from "../components/Common/Button.svelte";
     import createAccountStore from '../stores/beatleader/account'
+    import {formatDateRelative, dateFromUnix} from '../utils/date'
     import {opt} from '../utils/js'
     import {CURRENT_URL, BL_API_URL} from '../network/queues/beatleader/api-queue'
     import { navigate } from "svelte-routing";
+import Dialog from "../components/Common/Dialog.svelte";
 
     export let action;
 
@@ -13,6 +15,7 @@
     let password;
     let newPassword;
     let newLogin = opt($account, 'login');
+    let suspendingDialogShown = false;
 
     function performAction() {
         if (action == "addHome") {
@@ -149,7 +152,34 @@ If you not yet a patreon, you can become one right now at <a class="inlineLink" 
     </div>
 
     <Button iconFa="fas fa-plus-square" label="Change login" on:click={() => account.changeLogin(newLogin)}/>
+{:else if action == "autoban"}
+    {#if $account.ban}
+    Your account was suspended {formatDateRelative(dateFromUnix($account.ban.timeset))}<br>
+    You can activate it back if more than a week passed.
+
+    <Button iconFa="fas fa-plus-square" label="Try activate my account" on:click={() => account.unbanPlayer()}/>
+    {:else}
+    You can suspend your BeatLeader account. It will disappear in the leaderboards and ranking.<br>
+    And your replays will not be accepted anymore.<br><br>
+
+    <b>You can activate it back only after the week of suspension.<br>
+        All account data will be deleted after 6 month of suspension!</b>
+
+    <Button iconFa="fas fa-plus-square" label="Yes, suspend my account" on:click={() => suspendingDialogShown = !suspendingDialogShown}/>
+    {/if}
+    
 {/if}
+
+{#if suspendingDialogShown}
+    <Dialog type="confirm" title="Are you sure?" okButton="Yeah!" cancelButton="Hell no!"
+            on:confirm={() => { account.banPlayer(); suspendingDialogShown = false} }
+            on:cancel={() => suspendingDialogShown = false}
+    >
+      <div slot="content">
+        <div>Your BeatLeader account will be suspended!</div>
+      </div>
+    </Dialog>
+  {/if}
 
 {#if error}
 <p class="error">{error}</p>

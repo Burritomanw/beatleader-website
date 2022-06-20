@@ -337,8 +337,8 @@ export default (refreshOnCreate = true) => {
     
   }
 
-  const banPlayer = (playerId) =>
-  fetch(BL_API_URL + "admin/ban?playerId=" + playerId, { 
+  const banPlayer = (playerId, reason, duration) =>
+  fetch(BL_API_URL + "user/ban" + (playerId ? `?id=${playerId}&reason=${reason}&duration=${duration}` : ""), { 
       method: 'POST', 
       credentials: 'include'
   })
@@ -348,18 +348,22 @@ export default (refreshOnCreate = true) => {
           account.error = null;
 
           if (data.length > 0) {
-              account.error = data;
-              setTimeout(function(){
-                  account.error = null;
-                  set(account);
-              }, 3500);
+            account.error = data;
+          } else {
+            account.message = playerId ? "Player banned ✔" : "Account suspended ✔";
           }
+
+          setTimeout(function(){
+            account.error = null;
+            account.message = null;
+            set(account);
+        }, 3500);
 
           set(account);
       });
 
   const unbanPlayer = (playerId) =>
-  fetch(BL_API_URL + "admin/unban?playerId=" + playerId, { 
+  fetch(BL_API_URL + "user/unban" + (playerId ? `?id=${playerId}` : ""), { 
       method: 'POST', 
       credentials: 'include'
   })
@@ -369,12 +373,16 @@ export default (refreshOnCreate = true) => {
           account.error = null;
 
           if (data.length > 0) {
-              account.error = data;
-              setTimeout(function(){
-                  account.error = null;
-                  set(account);
-              }, 3500);
+            account.error = data;
+          } else {
+            account.message = playerId ? "Player unbanned ✔" : "Welcome back ✔";
           }
+
+          setTimeout(function(){
+            account.error = null;
+            account.message = null;
+            set(account);
+        }, 3500);
 
           set(account);
       });
