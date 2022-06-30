@@ -26,6 +26,7 @@ const DEFAULT_CONFIG = {
     billboardState: 'show',
     iconsOnAvatars: 'show',
     theme:'mirror',
+    oneclick: 'modassistant',
     bgimage:"/assets/background.png"
   },
   locale: DEFAULT_LOCALE,
