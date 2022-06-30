@@ -127,6 +127,7 @@ export default (options = {}) => {
       ret.player.clans = player?.clans ?? null;
 
       ret.score.score = s.modifiedScore;
+      ret.score.rankVoting = s.rankVoting;
 
       ret.score.timeSetString = formatDateRelative(dateFromUnix(s.timeset));
       ret.score.timeSet = s.timeset;

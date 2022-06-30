@@ -73,6 +73,7 @@
             page={params.page}
             {location}
             dontChangeType={false}
+            showVotings={true}
           />
         </Route>
         <Route path="/leaderboards/*page" let:params let:location>
